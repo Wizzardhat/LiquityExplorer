@@ -1,7 +1,14 @@
+<div>
+    <canvas id={canvasId} />
+</div>
+
 <script>
     import { onMount } from "svelte";
     import { Chart } from "chart.js/auto";
+    import {generateUniqueCanvasId } from "../utils/utils.js"
 
+    let canvasId = generateUniqueCanvasId(); 
+    console.log(canvasId)
     async function fetchTroveStake() {
         const response = await fetch(
             'http://127.0.0.1:8000/get_historical_number_of_troves/',
@@ -19,7 +26,8 @@
     onMount(async () => {
         let response_data = await fetchTroveStake();
         console.log(response_data);
-        const ctx = document.getElementById("myChart");
+        const ctx = document.getElementById(canvasId);
+        console.log(ctx)
 
         new Chart(ctx, {
             type: "line",
@@ -43,7 +51,3 @@
         });
     });
 </script>
-
-<div>
-    <canvas id="myChart" />
-</div>
