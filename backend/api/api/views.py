@@ -67,15 +67,9 @@ def get_historical_number_of_troves(request):
             trove_counts.append(trove_count_value)
             start_block += 178560
 
-        data_map = {}
-
-        for _ in range(len(blocks)):
-            data_map[blocks[_]] = trove_counts[_]
-
-        json_data = json.dumps(data_map)
-
         response_data = {
-            json_data
+            'blocks': blocks,
+            'trove_counts': trove_counts
         }
 
         return Response(response_data, status=status.HTTP_200_OK)
