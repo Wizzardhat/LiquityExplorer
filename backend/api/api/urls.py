@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path
-from .views import get_trove_stake, get_historical_number_of_troves, get_staked_lqty_token_amount
+from .views import get_trove_stake, get_historical_number_of_troves, get_staked_lqty_token_amount, get_best_troves, get_worst_troves
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -8,5 +8,7 @@ urlpatterns = [
     path('get_historical_number_of_troves/',
          get_historical_number_of_troves, name='historical-number-of-troves'),
     path('get_staked_lqty_token_amount/',
-         get_staked_lqty_token_amount, name='staked-lqty-token-amount')
+         get_staked_lqty_token_amount, name='staked-lqty-token-amount'),
+     path('get-best-troves/', get_best_troves, name='get-best-troves'),
+     path('get-worst-troves/', get_worst_troves, name='get-best-troves'),
 ]
