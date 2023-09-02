@@ -1,9 +1,9 @@
-import os
 from dotenv import load_dotenv
+import os
 from rest_framework import status
 from rest_framework.response import Response
-from web3 import Web3
 from rest_framework.decorators import api_view
+from web3 import Web3
 
 def load_env():
     # Load environment variables from .env file
