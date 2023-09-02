@@ -1,7 +1,9 @@
 <script>
     import { onMount } from "svelte";
     import { Chart } from "chart.js/auto";
-    let canvasId = 'myChart-' + Math.random().toString(36).substr(2, 9); 
+    import {generateUniqueCanvasId } from "../utils/utils.js"
+
+    let canvasId = generateUniqueCanvasId(); 
     async function fetchTroveStake() {
         const response = await fetch(
             'http://127.0.0.1:8000/trove-stake/',
