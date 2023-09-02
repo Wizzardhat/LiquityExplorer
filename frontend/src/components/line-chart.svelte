@@ -2,17 +2,33 @@
     import { onMount } from "svelte";
     import { Chart } from "chart.js/auto";
 
-    onMount(() => {
+    async function fetchTroveStake() {
+        const response = await fetch(
+            'http://127.0.0.1:8000/trove-stake/',
+            {
+                credentials: 'include',
+            },
+            ); // Replace with your API endpoint URL
+        if (!response.ok) {
+            throw new Error('Failed to fetch data from the API');
+        }
+        const data = await response.json();
+        return data;
+    }
+
+    onMount(async () => {
+        let troveStake = await fetchTroveStake();
+        console.log(troveStake);
         const ctx = document.getElementById("myChart");
 
         new Chart(ctx, {
             type: "line",
             data: {
-                labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+                labels: ["Trove Stake"],
                 datasets: [
                     {
                         label: "# of Votes",
-                        data: [12, 19, 3, 5, 2, 3],
+                        data: [troveStake],
                         borderWidth: 1,
                     },
                 ],
