@@ -1,6 +1,6 @@
 from dotenv import load_dotenv
 import os
-import pandas as pd
+import json
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
@@ -57,29 +57,35 @@ def get_historical_number_of_troves(request):
         web3 = Web3(Web3.HTTPProvider(ethereum_provider_url))
 
         # Create a contract instance using the address and ABI
-        contract = web3.eth.contract(
+        trove_manager = web3.eth.contract(
             address=trove_manager_address, abi=trove_manager_abi)
 
         # Pandas dataframe will be used to plot the trove count over time (block numbers)
-        df = pd.DataFrame(columns=['Block', 'Trove Count'])
+        blocks = []
+        trove_counts = []
         # Liquity protocol deployment block number: April 2021
         start_block = 12178557
         # The final block on the chart is the current block
         end_block = web3.eth.block_number
 
         while start_block <= end_block:
-            trove_count = trove_manager.functions.getTroveOwnersCount().call(
+            trove_count_value = trove_manager.functions.getTroveOwnersCount().call(
                 block_identifier=start_block)
-            print(trove_count)
-            df = df.append(
-                {'Block': start_block, 'Trove Count': trove_count}, ignore_index=True)
+            blocks.append(start_block)
+            trove_counts.append(trove_count_value)
             start_block += 178560
 
+        data_map = {}
+
+        for _ in range(len(blocks)):
+            data_map[blocks[_]] = trove_counts[_]
+
+        json_data = json.dumps(data_map)
+
         response_data = {
-                    'stake': trove_manager_stake
-                }
+            json_data
+        }
 
-                return Response(response_data, status=status.HTTP_200_OK)
-            except Exception as e:
-                return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
+        return Response(response_data, status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
