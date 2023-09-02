@@ -1,5 +1,5 @@
 <script>
-    import LineChart from "../components/line-chart.svelte";
+    import TroveChart from "../components/historical-troves.svelte";
 </script>
 
-<LineChart />
+<TroveChart />
