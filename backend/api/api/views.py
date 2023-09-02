@@ -39,7 +39,7 @@ def get_trove_stake(request):
 @api_view(['GET'])
 def get_historical_number_of_troves(request):
     # Load alchemy API key from .env file
-    MAINNET_RPC_URL = load_env()
+    MAINNET_RPC_URL = utils.load_env()
     trove_manager_address, trove_manager_abi = get_trove_manager_contract_data()
     if not trove_manager_abi or not trove_manager_address:
         return Response({'error': 'Contract address and ABI are required.'}, status=status.HTTP_400_BAD_REQUEST)
@@ -79,7 +79,7 @@ def get_historical_number_of_troves(request):
 
 @api_view(['GET'])
 def get_staked_lqty_token_amount(request):
-    MAINNET_RPC_URL = load_env()
+    MAINNET_RPC_URL = utils.load_env()
     lqty_staking_address, lqty_staking_abi = get_lqty_staking_contract_data()
     if not lqty_staking_address or not lqty_staking_abi:
         return Response({'error': 'Contract address and ABI are required.'}, status=status.HTTP_400_BAD_REQUEST)
@@ -100,7 +100,6 @@ def get_staked_lqty_token_amount(request):
 
 @api_view(['GET'])
 def get_best_troves(request):
-    print('teeeeeeeeeeest')
     sorted_troves = SortedTroves()
     sorted_troves.get_best_sorted_troves_list()
     return Response({"troves":sorted_troves.get_best_sorted_troves_list()})
