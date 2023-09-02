@@ -9,7 +9,6 @@ def load_env():
     # Load environment variables from .env file
     load_dotenv()
     return os.environ.get('MAINNET_RPC_URL')
-    
 
 @api_view(['GET'])
 def get_trove_stake(request):
