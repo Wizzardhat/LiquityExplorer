@@ -117,14 +117,16 @@ def get_best_troves(request):
 @api_view(['GET'])
 def get_worst_troves(request):
     sorted_troves = SortedTroves()
-    return Response({"troves":sorted_troves.get_worst_sorted_troves_list()})
+    return Response({"troves": sorted_troves.get_worst_sorted_troves_list()})
+
 
 @api_view(['GET'])
 def get_historical_number_of_eth_lusd(request):
     MAINNET_RPC_URL = utils.load_env()
     web3 = Web3(Web3.HTTPProvider(MAINNET_RPC_URL))
     active_pool_address, active_pool_abi = get_acitve_pool_contract_data()
-    active_pool_contract = web3.eth.contract(address=active_pool_address, abi=active_pool_abi)
+    active_pool_contract = web3.eth.contract(
+        address=active_pool_address, abi=active_pool_abi)
     start_block = 12178558
     end_block = web3.eth.block_number
     interval = 178560
@@ -134,7 +136,8 @@ def get_historical_number_of_eth_lusd(request):
     while start_block <= end_block:
         try:
             tmp_eth = active_pool_contract.functions.getETH().call(block_identifier=start_block)
-            tmp_lusd = active_pool_contract.functions.getLUSDDebt().call(block_identifier=start_block)
+            tmp_lusd = active_pool_contract.functions.getLUSDDebt().call(
+                block_identifier=start_block)
             eth.append(tmp_eth)
             LUSD.append(tmp_lusd)
             blocks.append(start_block)
