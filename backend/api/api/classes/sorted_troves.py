@@ -5,7 +5,6 @@ import api.utils as utils
 class SortedTroves:
     def __init__(self):
         MAINNET_RPC_URL = utils.load_env()
-        print('teeeeest', MAINNET_RPC_URL)
         self.web3 = Web3(Web3.HTTPProvider(MAINNET_RPC_URL))
         sorted_troves_address, sorted_troves_abi = get_sorted_troves_contract_data()
         self.sorted_troves = self.web3.eth.contract(address=sorted_troves_address, abi=sorted_troves_abi)
@@ -48,7 +47,6 @@ class SortedTroves:
 
     def get_best_sorted_troves_list(self):
         sorted_troves_head, sorted_troves_tail, sorted_troves_max_size, sorted_troves_size = self.sorted_troves.functions.data().call()
-        print('hehe')
         return self.get_best_troves_data(5, sorted_troves_head)
 
     def get_worst_sorted_troves_list(self):
