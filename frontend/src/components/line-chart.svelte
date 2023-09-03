@@ -8,7 +8,6 @@
     let chart = null;
     function createChart(){
         const ctx = document.getElementById(canvasId);
-        console.log(ctx, xSeries, ySeries, xSeriesLabel);
         chart = new Chart(ctx, {
             type: "line",
             data: {

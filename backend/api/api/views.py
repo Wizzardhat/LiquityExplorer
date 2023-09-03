@@ -206,11 +206,5 @@ def get_trove_liquidation_events(request):
                 "event_data:": log.args,
                 "date": formatted_date
             }
-        log = {
-                "block_number": log.blockNumber,
-                "transaction_hash:": log.transactionHash.hex(),
-                "event_name:": log.event,
-                "event_data:": log.args
-            }
         logs.append(log)
     return Response({"liquidation_logs": logs})
