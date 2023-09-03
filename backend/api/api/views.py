@@ -7,6 +7,7 @@ from .contracts import get_trove_manager_contract_data, get_lqty_staking_contrac
 from .classes.sorted_troves import SortedTroves
 from . import utils
 
+
 @api_view(['GET'])
 def get_trove_stake(request):
     # Load alchemy API key from .env file
@@ -98,11 +99,13 @@ def get_staked_lqty_token_amount(request):
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+
 @api_view(['GET'])
 def get_best_troves(request):
     sorted_troves = SortedTroves()
     sorted_troves.get_best_sorted_troves_list()
-    return Response({"troves":sorted_troves.get_best_sorted_troves_list()})
+    return Response({"troves": sorted_troves.get_best_sorted_troves_list()})
+
 
 @api_view(['GET'])
 def get_worst_troves(request):
