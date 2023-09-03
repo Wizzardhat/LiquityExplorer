@@ -7,7 +7,6 @@ from .contracts import get_trove_manager_contract_data, get_lqty_staking_contrac
 from .classes.sorted_troves import SortedTroves
 from . import utils
 
-
 @api_view(['GET'])
 def get_trove_stake(request):
     # Load alchemy API key from .env file
@@ -139,3 +138,56 @@ def get_historical_number_of_eth_lusd(request):
         "LUSD": LUSD,
         "blocks": blocks
     })
+
+@api_view(['GET'])
+def get_redemption_events(request):
+    MAINNET_RPC_URL = utils.load_env()
+    web3 = Web3(Web3.HTTPProvider(MAINNET_RPC_URL))
+    trove_manager_address, trove_manager_abi = get_trove_manager_contract_data()
+    trove_manager = web3.eth.contract(
+    address=trove_manager_address, abi=trove_manager_abi)
+    from_block = max(0, web3.eth.block_number - 100000)
+    redemptions_event_filter = trove_manager.events.Redemption.create_filter(fromBlock=from_block, toBlock='latest')
+    redemptions_events = redemptions_event_filter.get_all_entries()
+    logs = []
+    for log in redemptions_events:
+        print("Block Number:", log.blockNumber)
+        print("Transaction Hash:", log.transactionHash.hex())
+        print("Event Name:", log.event)
+        print("Event Data:", log.args)
+        print("")
+        log = {
+                "block_number": log.blockNumber,
+                "transaction_hash:": log.transactionHash.hex(),
+                "event_name:": log.event,
+                "event_data:": log.args,
+            }
+        logs.append(log)
+        print(logs, 'test')
+    return Response({"redemption_logs": logs})
+
+@api_view(['GET'])
+def get_trove_liquidation_events(request):
+    MAINNET_RPC_URL = utils.load_env()
+    web3 = Web3(Web3.HTTPProvider(MAINNET_RPC_URL))
+    trove_manager_address, trove_manager_abi = get_trove_manager_contract_data()
+    trove_manager = web3.eth.contract(
+    address=trove_manager_address, abi=trove_manager_abi)
+    from_block = max(0, web3.eth.block_number - 100000)
+    trove_liquidation_event_filter = trove_manager.events.TroveLiquidated.create_filter(fromBlock=from_block, toBlock='latest')
+    liquidation_events = trove_liquidation_event_filter.get_all_entries()
+    logs = []
+    for log in liquidation_events:
+        print("Block Number:", log.blockNumber)
+        print("Transaction Hash:", log.transactionHash.hex())
+        print("Event Name:", log.event)
+        print("Event Data:", log.args)
+        print("")
+        log = {
+                "block_number": log.blockNumber,
+                "transaction_hash:": log.transactionHash.hex(),
+                "event_name:": log.event,
+                "event_data:": log.args
+            }
+        logs.append(log)
+    return Response({"liquidation_logs": logs})
