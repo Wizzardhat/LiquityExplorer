@@ -1,6 +1,7 @@
 <script>
     import { onMount } from "svelte";
     import Loading from "./loading.svelte";
+    import Table from "./table.svelte";
 
     let bestTroves = [];
     let worstTroves = [];
@@ -30,17 +31,10 @@
         <Loading />
     {:else}
         <h3>Best Troves</h3>
-        <div>
-            {#each bestTroves as bestTrove (bestTrove.array_index)}
-                <div>
-                    <span>Address: {bestTrove.address}</span>
-                    <span>Collateral: {bestTrove.collateral}</span>
-                    <span>Debt: {bestTrove.debt}</span>
-                    <span>Stake: {bestTrove.stake}</span>
-                    <br />
-                </div>
-            {/each}
-        </div>
+        <Table
+            tableHeaders={["address", "collateral", "debt", "stake"]}
+            tableData={bestTroves}
+        />
     {/if}
 </main>
 
@@ -49,16 +43,9 @@
         <Loading />
     {:else}
         <h3>Worst Troves</h3>
-        <div>
-            {#each worstTroves as worstTrove (worstTrove.array_index)}
-                <div>
-                    <span>Address: {worstTrove.address}</span>
-                    <span>Collateral: {worstTrove.collateral}</span>
-                    <span>Debt: {worstTrove.debt}</span>
-                    <span>Stake: {worstTrove.stake}</span>
-                    <br />
-                </div>
-            {/each}
-        </div>
+        <Table
+            tableHeaders={["address", "collateral", "debt", "stake"]}
+            tableData={worstTroves}
+        />
     {/if}
 </main>
