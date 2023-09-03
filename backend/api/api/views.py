@@ -1,4 +1,4 @@
-import json
+import datetime
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
@@ -54,7 +54,7 @@ def get_historical_number_of_troves(request):
             address=trove_manager_address, abi=trove_manager_abi)
 
         # Pandas dataframe will be used to plot the trove count over time (block numbers)
-        blocks = []
+        date = []
         trove_counts = []
         # Liquity protocol deployment block number: April 2021
         start_block = 12178557
@@ -64,12 +64,19 @@ def get_historical_number_of_troves(request):
         while start_block <= end_block:
             trove_count_value = trove_manager.functions.getTroveOwnersCount().call(
                 block_identifier=start_block)
-            blocks.append(start_block)
+            current_block = web3.eth.get_block(start_block)
+            current_timestamp = current_block.timestamp
+
+            datetime_obj = datetime.datetime.fromtimestamp(current_timestamp)
+            # Format the datetime object as a date (year, month, day)
+            formatted_date = datetime_obj.strftime('%Y-%m-%d')
+
+            date.append(formatted_date)
             trove_counts.append(trove_count_value)
             start_block += 178560
 
         response_data = {
-            'blocks': blocks,
+            'blocks': date,
             'trove_counts': trove_counts
         }
 
