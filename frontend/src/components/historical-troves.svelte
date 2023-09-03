@@ -1,10 +1,10 @@
 <script>
     import { onMount } from "svelte";
-    import { Chart } from "chart.js/auto";
-    import { generateUniqueCanvasId } from "../utils/utils.js";
+    import LineChart from "./line-chart.svelte";
     import Loading from "./loading.svelte";
-
-    let canvasId = generateUniqueCanvasId();
+    
+    let trove_counts = []
+    let blocks = []
     let isLoading = true; // Used for loading animation
 
     async function fetchTroveStake() {
@@ -24,30 +24,8 @@
 
     onMount(async () => {
         let response_data = await fetchTroveStake();
-        console.log(response_data);
-        const ctx = document.getElementById(canvasId);
-        console.log(ctx);
-
-        new Chart(ctx, {
-            type: "line",
-            data: {
-                labels: response_data.blocks,
-                datasets: [
-                    {
-                        label: "Number of open troves",
-                        data: response_data.trove_counts,
-                        borderWidth: 1,
-                    },
-                ],
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                    },
-                },
-            },
-        });
+        trove_counts = response_data.trove_counts
+        blocks = response_data.blocks
     });
 </script>
 
@@ -55,8 +33,10 @@
     {#if isLoading}
     <Loading/>
     {:else}
-        <div>
-            <canvas id={canvasId} />
-        </div>
+    <LineChart
+        xSeries={trove_counts}
+        xSeriesLabel={"Number of open troves"}
+        ySeries={blocks}
+    />
     {/if}
 </main>
