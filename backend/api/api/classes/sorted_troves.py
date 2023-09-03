@@ -49,8 +49,8 @@ class SortedTroves:
     def get_best_sorted_troves_list(self):
         sorted_troves_head, sorted_troves_tail, sorted_troves_max_size, sorted_troves_size = self.sorted_troves.functions.data().call()
         print('hehe')
-        return self.get_best_troves_data(1, sorted_troves_head)
+        return self.get_best_troves_data(5, sorted_troves_head)
 
     def get_worst_sorted_troves_list(self):
         sorted_troves_head, sorted_troves_tail, sorted_troves_max_size, sorted_troves_size = self.sorted_troves.functions.data().call()
-        return self.get_troves_to_liquidation_data(10, sorted_troves_tail)
+        return self.get_troves_to_liquidation_data(5, sorted_troves_tail)
