@@ -15,6 +15,7 @@
             </tr>
         </thead>
         <tbody>
+            {#if tableData.length > 0}
             <!-- rows -->
             {#each tableData as row, index (row.id || index)}
                 <tr>
@@ -24,6 +25,9 @@
                     {/each}
                 </tr>
             {/each}
+            {:else}
+            <span>No data!</span>
+            {/if}
         </tbody>
     </table>
 </div>

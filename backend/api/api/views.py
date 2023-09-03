@@ -174,9 +174,9 @@ def get_redemption_events(request):
         formatted_date = datetime_obj.strftime('%Y-%m-%d %H:%M')
         log = {
                 "block_number": log.blockNumber,
-                "transaction_hash:": log.transactionHash.hex(),
-                "event_name:": log.event,
-                "event_data:": log.args,
+                "transaction_hash": log.transactionHash.hex(),
+                "event_name": log.event,
+                "event_data": log.args,
                 "date": formatted_date
             }
         logs.append(log)
@@ -201,9 +201,9 @@ def get_trove_liquidation_events(request):
         formatted_date = datetime_obj.strftime('%Y-%m-%d %H:%M')
         log = {
                 "block_number": log.blockNumber,
-                "transaction_hash:": log.transactionHash.hex(),
-                "event_name:": log.event,
-                "event_data:": log.args,
+                "transaction_hash": log.transactionHash.hex(),
+                "event_name": log.event,
+                "event_data": log.args,
                 "date": formatted_date
             }
         logs.append(log)
