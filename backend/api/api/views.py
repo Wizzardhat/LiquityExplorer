@@ -132,20 +132,26 @@ def get_historical_number_of_eth_lusd(request):
     interval = 178560
     eth = []
     LUSD = []
-    blocks = []
+    date = []
     while start_block <= end_block:
         try:
             tmp_eth = active_pool_contract.functions.getETH().call(block_identifier=start_block)
             tmp_lusd = active_pool_contract.functions.getLUSDDebt().call(
                 block_identifier=start_block)
+            current_block = web3.eth.get_block(start_block)
+            current_timestamp = current_block.timestamp
+
+            datetime_obj = datetime.datetime.fromtimestamp(current_timestamp)
+            # Format the datetime object as a date (year, month, day)
+            formatted_date = datetime_obj.strftime('%Y-%m-%d')
             eth.append(tmp_eth)
             LUSD.append(tmp_lusd)
-            blocks.append(start_block)
+            date.append(formatted_date)
         except:
             print('not found')
         start_block += interval
     return Response({
         "eth": eth,
         "LUSD": LUSD,
-        "blocks": blocks
+        "blocks": date
     })
