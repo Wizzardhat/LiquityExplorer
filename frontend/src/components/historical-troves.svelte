@@ -1,6 +1,9 @@
 <script>
     import { onMount } from "svelte";
-    import { Chart } from "chart.js/auto";
+    import LineChart from "./line-chart.svelte";
+
+    let trove_counts = []
+    let blocks = []
 
     async function fetchTroveStake() {
         const response = await fetch(
@@ -18,32 +21,13 @@
 
     onMount(async () => {
         let response_data = await fetchTroveStake();
-        console.log(response_data);
-        const ctx = document.getElementById("myChart");
-
-        new Chart(ctx, {
-            type: "line",
-            data: {
-                labels: response_data.blocks,
-                datasets: [
-                    {
-                        label: "Number of open troves",
-                        data: response_data.trove_counts,
-                        borderWidth: 1,
-                    },
-                ],
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                    },
-                },
-            },
-        });
+        trove_counts = response_data.trove_counts
+        blocks = response_data.blocks
     });
 </script>
 
-<div>
-    <canvas id="myChart" />
-</div>
+<LineChart
+    xSeries={trove_counts}
+    xSeriesLabel={"Number of open troves"}
+    ySeries={blocks}
+/>
