@@ -15,7 +15,6 @@
         console.log(bestTroves, worstTroves, isLoading);
     });
 </script>
-
 <main>
     {#if isLoading}
         <Loading />
