@@ -1,4 +1,4 @@
-import json
+import datetime
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
@@ -54,7 +54,7 @@ def get_historical_number_of_troves(request):
             address=trove_manager_address, abi=trove_manager_abi)
 
         # Pandas dataframe will be used to plot the trove count over time (block numbers)
-        blocks = []
+        date = []
         trove_counts = []
         # Liquity protocol deployment block number: April 2021
         start_block = 12178557
@@ -64,12 +64,19 @@ def get_historical_number_of_troves(request):
         while start_block <= end_block:
             trove_count_value = trove_manager.functions.getTroveOwnersCount().call(
                 block_identifier=start_block)
-            blocks.append(start_block)
+            current_block = web3.eth.get_block(start_block)
+            current_timestamp = current_block.timestamp
+
+            datetime_obj = datetime.datetime.fromtimestamp(current_timestamp)
+            # Format the datetime object as a date (year, month, day)
+            formatted_date = datetime_obj.strftime('%Y-%m-%d')
+
+            date.append(formatted_date)
             trove_counts.append(trove_count_value)
             start_block += 178560
 
         response_data = {
-            'blocks': blocks,
+            'blocks': date,
             'trove_counts': trove_counts
         }
 
@@ -110,32 +117,41 @@ def get_best_troves(request):
 @api_view(['GET'])
 def get_worst_troves(request):
     sorted_troves = SortedTroves()
-    return Response({"troves":sorted_troves.get_worst_sorted_troves_list()})
+    return Response({"troves": sorted_troves.get_worst_sorted_troves_list()})
+
 
 @api_view(['GET'])
 def get_historical_number_of_eth_lusd(request):
     MAINNET_RPC_URL = utils.load_env()
     web3 = Web3(Web3.HTTPProvider(MAINNET_RPC_URL))
     active_pool_address, active_pool_abi = get_acitve_pool_contract_data()
-    active_pool_contract = web3.eth.contract(address=active_pool_address, abi=active_pool_abi)
+    active_pool_contract = web3.eth.contract(
+        address=active_pool_address, abi=active_pool_abi)
     start_block = 12178558
     end_block = web3.eth.block_number
     interval = 178560
     eth = []
     LUSD = []
-    blocks = []
+    date = []
     while start_block <= end_block:
         try:
             tmp_eth = active_pool_contract.functions.getETH().call(block_identifier=start_block)
-            tmp_lusd = active_pool_contract.functions.getLUSDDebt().call(block_identifier=start_block)
+            tmp_lusd = active_pool_contract.functions.getLUSDDebt().call(
+                block_identifier=start_block)
+            current_block = web3.eth.get_block(start_block)
+            current_timestamp = current_block.timestamp
+
+            datetime_obj = datetime.datetime.fromtimestamp(current_timestamp)
+            # Format the datetime object as a date (year, month, day)
+            formatted_date = datetime_obj.strftime('%Y-%m-%d')
             eth.append(tmp_eth)
             LUSD.append(tmp_lusd)
-            blocks.append(start_block)
+            date.append(formatted_date)
         except:
             print('not found')
         start_block += interval
     return Response({
         "eth": eth,
         "LUSD": LUSD,
-        "blocks": blocks
+        "blocks": date
     })
