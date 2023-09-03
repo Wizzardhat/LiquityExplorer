@@ -1,1 +1,1 @@
-<span class="loading loading-spinner loading-xxl"></span>
+<div class="loading loading-spinner loading-lg mx-auto my-auto"></div>
